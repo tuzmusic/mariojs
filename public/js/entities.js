@@ -6,8 +6,6 @@ export async function createMario() {
 
     // create mario and set basic properties
     const mario = new Entity();
-    mario.pos.set(64, 180);
-    mario.vel.set(2, -10);
 
     // Add some functions to the mario entity.
 
@@ -19,9 +17,9 @@ export async function createMario() {
     // Update mario's position.
     // Called in the parent update function so that
     // Mario is drawn at new position on next frame.
-    mario.update = function () {
-        this.pos.x += this.vel.x;
-        this.pos.y += this.vel.y;
+    mario.update = function (deltaTime) {
+        this.pos.x += this.vel.x * deltaTime;
+        this.pos.y += this.vel.y * deltaTime;
     };
 
     return mario;

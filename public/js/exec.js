@@ -3,6 +3,7 @@ import { loadBackgroundSprites } from "./sprites.js";
 import { Compositor } from "./Compositor.js";
 import { createBackgroundLayer, createSpriteLayer } from "./layers.js";
 import { createMario } from "./entities.js";
+import Timer from "./Timer.js";
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -14,25 +15,37 @@ Promise.all([
 ]).then(([ mario, backgroundSprites, level ]) => {
     // create layer drawing functions and add them to the compositor
     const comp = new Compositor();
-    const backgroundLayer = createBackgroundLayer(level.backgrounds, backgroundSprites);
-    const spriteLayer = createSpriteLayer(mario);
-    comp.layers.push(backgroundLayer);
-    comp.layers.push(spriteLayer);
-√
-    const gravity = 0.5;
 
-    function update() {
-        // draw all layers in the compositor by calling
-        // all of their draw functions in the context.
+    // create the background layer
+    const backgroundLayer = createBackgroundLayer(level.backgrounds, backgroundSprites);
+    comp.layers.push(backgroundLayer);
+
+    // set some values on the mario entity we got in the promise chain
+    const gravity = 30;
+    mario.pos.set(64, 180);
+    mario.vel.set(200, -600);
+
+    // create the mario sprite.
+    const spriteLayer = createSpriteLayer(mario);
+    comp.layers.push(spriteLayer);
+
+    const timer = new Timer(1 / 60);
+
+    // define the timer's update function, where we have access to mario, and the context, etc.
+    timer.update = function update(deltaTime) {
+        // draw all layers in the compositor by calling all of their draw functions in the context.
         comp.draw(context);
 
+        // update mario's position
+        mario.update(deltaTime);
+
+        // update mario's velocity for the next update.
         // y-vel starts negative, so mario moves up (slowing down) until vel = 0, then moves down.
         mario.vel.y += gravity;
 
-        mario.update();
-        requestAnimationFrame(update);
-    }
+    };
 
-    update();
+    // and start the timer
+    timer.start();
 });
 
