@@ -1,3 +1,3 @@
-import go from "./exec.js";
+import "./exec.js";
 
-go()
+// go()

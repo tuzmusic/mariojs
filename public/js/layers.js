@@ -13,6 +13,13 @@ function drawBackground(background, context, sprites) {
     });
 }
 
+
+export function createSpriteLayer(entity) {
+    return function drawSpriteLayer(context) {
+        entity.draw(context);
+    };
+}
+
 /**
  * Returns a function that draws the layers onto a given context.
  * @param backgrounds The info for the backgrounds to draw.
