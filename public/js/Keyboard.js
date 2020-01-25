@@ -1,3 +1,5 @@
+import Entity from "./Entity.js";
+
 const PRESSED = 1;
 const RELEASED = 0;
 
@@ -12,16 +14,20 @@ export default class Keyboard {
     };
 
     addMapping = (...args) => {
-        // handle normal add mapping (keyCode, callback)
-        if (args[1] instanceof Function) {
-            this._addMapping(...args);
-        } else if (args.slice(2).every(arg => typeof arg === 'string')) {
-            const [ keyCode, entity, trait, start, stop ] = args;
-            const callback = keyState => {
-                entity[trait][keyState ? start : stop]();
-            };
-            this._addMapping(keyCode, callback);
+        let callback;
+        const keyCode = args.shift();
+        const next = args.shift();
+
+        // allow for normal event listening
+        if (next instanceof Function) callback = next;
+
+        // allow an entity, trait name, and start and stop method names.
+        else if (next instanceof Entity) {
+            const entity = next;
+            const [ trait, start, stop ] = args;
+            callback = keyState => entity[trait][keyState ? start : stop]();
         }
+        this._addMapping(keyCode, callback);
     };
 
     handleEvent = (event) => {
