@@ -1,18 +1,3 @@
-/**
- * @param background The background object
- * @param context The context in which to draw
- * @param sprites The spritesheet in use
- */
-function drawBackground(background, context, sprites) {
-    background.ranges.forEach(([ x1, x2, y1, y2 ]) => {
-        for (let x = x1; x < x2; x++) {
-            for (let y = y1; y < y2; y++) {
-                sprites.drawTiles(background.tile, context, x, y);
-            }
-        }
-    });
-}
-
 export function createSpriteLayer(entities) {
     return function drawSpriteLayer(context) {
         entities.forEach(entity => entity.draw(context));
@@ -25,15 +10,15 @@ export function createSpriteLayer(entities) {
  * @param sprites The sprites from which the backgrounds will be created.
  * @returns {drawBackgroundLayer}
  */
-export function createBackgroundLayer(backgrounds, sprites) {
+export function createBackgroundLayer(level, sprites) {
     // create a buffer on which to pre-draw the backgrounds
     const buffer = document.createElement('canvas');
     buffer.width = 256;
     buffer.height = 240;
+    const context = buffer.getContext('2d');
 
-    // draw each background to the buffer using the sprites
-    backgrounds.forEach(background => {
-        drawBackground(background, buffer.getContext('2d'), sprites);
+    level.tiles.forEach((tile, x, y) => {
+        sprites.drawTiles(tile.name, context, x, y);
     });
 
     // the return function takes a context and draws the buffer

@@ -10,12 +10,15 @@ Promise.all([
     createMario(), // creates and yields the mario object
     loadLevel('1-1')
 ]).then(([ mario, level ]) => {
-
-
-    // set some values on the mario entity we got in the promise chain
     const gravity = 30;
-    mario.pos.set(64, 80);
+
+    // add mario to the level
     level.entities.add(mario);
+
+    // set mario's starting position
+    mario.pos.set(64, 80);
+
+    // map key behavior for mario
     const SPACE = 32;
     const input = new Keyboard();
     input.addMapping(SPACE, mario, 'jump', 'start', 'cancel');
