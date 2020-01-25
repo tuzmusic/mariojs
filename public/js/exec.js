@@ -4,7 +4,7 @@ import { Compositor } from "./Compositor.js";
 import { createBackgroundLayer, createSpriteLayer } from "./layers.js";
 import { createMario } from "./entities.js";
 import Timer from "./Timer.js";
-import Keyboard from "./KeyboardState.js";
+import Keyboard from "./Keyboard.js";
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -28,10 +28,10 @@ Promise.all([
 
     const SPACE = 32;
     const input = new Keyboard();
-    input.addMapping(SPACE, keyState => keyState ? mario.jump.start() : mario.jump.cancel());
-    input.addMapping(SPACE, keyState =>
-        mario.jump[keyState ? 'start' : 'cancel']()
-    );
+    // input.addMapping(SPACE, keyState =>
+    //     mario.jump[keyState ? 'start' : 'cancel']()
+    // );
+    input.addMapping(SPACE, mario, 'jump', 'start', 'cancel');
     input.listenTo(window);
 
     // create the mario sprite.
