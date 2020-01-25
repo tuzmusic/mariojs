@@ -1,6 +1,7 @@
 import Entity from "./Entity.js";
 import { loadMarioSprite } from "./sprites.js";
 import { Velocity } from "./traits/Velocity.js";
+import { Jump } from "./traits/Jump.js";
 
 export async function createMario() {
     const sprite = await loadMarioSprite(); // get the sprite BEFORE we do anything else
@@ -9,6 +10,7 @@ export async function createMario() {
     const mario = new Entity();
 
     mario.addTrait(new Velocity());
+    mario.addTrait(new Jump());
 
     // Add some functions to the mario entity.
 
