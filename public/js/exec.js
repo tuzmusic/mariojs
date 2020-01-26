@@ -28,7 +28,9 @@ Promise.all([
         // map key behavior for mario
         const SPACE = 32;
         const input = new Keyboard();
-        input.addMapping(SPACE, mario, 'jump', 'start', 'cancel');
+        input.addMapping(' ', mario, 'jump', 'start', 'cancel');
+        input.addMapping('ArrowLeft', mario, 'move', 'left', 'cancel');
+        input.addMapping('ArrowRight', mario, 'move', 'right', 'cancel');
         input.listenTo(window);
 
         // add mario to the level

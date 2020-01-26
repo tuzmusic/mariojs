@@ -9,10 +9,6 @@ export default class Keyboard {
         this.keyMap = new Map(); // the action mapped to each key
     }
 
-    _addMapping = (keyCode, callBack) => {
-        return this.keyMap.set(keyCode, callBack);
-    };
-
     addMapping = (...args) => {
         let callback;
         const keyCode = args.shift();
@@ -27,24 +23,24 @@ export default class Keyboard {
             const [ trait, start, stop ] = args;
             callback = keyState => entity[trait][keyState ? start : stop]();
         }
-        this._addMapping(keyCode, callback);
+        this.keyMap.set(keyCode, callback);
     };
 
     handleEvent = (event) => {
-        const { keyCode } = event;
-        if (!this.keyMap.has(keyCode)) return;
+        const { key } = event;
+        if (!this.keyMap.has(key)) return;
 
         event.preventDefault();
 
         // get the keystate
         const keyState = (event.type === 'keydown') ? PRESSED : RELEASED;
 
-        if (keyState === this.keyStates.get(keyCode)) return;
+        if (keyState === this.keyStates.get(key)) return;
 
         // store the keystate if it has changed
-        this.keyStates.set(keyCode, keyState);
+        this.keyStates.set(key, keyState);
         // run the callback
-        this.keyMap.get(keyCode)(keyState);
+        this.keyMap.get(key)(keyState);
     };
 
     listenTo = (window) => {
