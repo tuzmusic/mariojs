@@ -19,13 +19,12 @@ export class Jump extends Trait {
     }
 
     start() {
-        console.log('start jump');
         // start the clock
         this.engageTime = this.duration;
     }
 
     cancel() {
-        console.log('cancel jump');
+        // cancel/reset the clock
         this.engageTime = 0;
     }
 
