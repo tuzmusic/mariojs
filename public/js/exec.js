@@ -2,6 +2,7 @@ import { loadLevel, } from "./loaders.js";
 import { createMario } from "./entities.js";
 import Timer from "./Timer.js";
 import Keyboard from "./Keyboard.js";
+import { createCollisionLayer } from "./layers.js";
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -21,44 +22,40 @@ Promise.all([
         });
     });
 
-    function prepareMario() {
-        // set mario's starting position
-        mario.pos.set(64, 80);
+    // set mario's starting position
+    mario.pos.set(64, 80);
 
-        // map key behavior for mario
-        const SPACE = 32;
-        const input = new Keyboard();
-        input.addMapping(' ', mario, 'jump', 'start', 'cancel');
-        input.addMapping('ArrowLeft', mario, 'move', 'left', 'cancel');
-        input.addMapping('ArrowRight', mario, 'move', 'right', 'cancel');
-        input.listenTo(window);
+    // map key behavior for mario
+    const input = new Keyboard();
+    input.addMapping(' ', mario, 'jump', 'start', 'cancel');
+    // input.addMapping('ArrowLeft', mario, 'go', 'left', 'left', );
+    // input.addMapping('ArrowRight', mario, 'go', 'right', 'right', );
+    input.listenTo(window);
 
-        // add mario to the level
-        level.entities.add(mario);
-    }
+    level.comp.layers.push(createCollisionLayer(level));
 
-    function handleTimer() {
-        const timer = new Timer(1 / 60);
+    // add mario to the level
+    level.entities.add(mario);
 
-        // define the timer's update function, where we have access to mario, and the context, etc.
-        timer.update = function update(deltaTime) {
-            // draw all layers in the compositor by calling all of their draw functions in the context.
-            level.comp.draw(context);
 
-            // update mario's position
-            level.update(deltaTime);
+    const timer = new Timer(1 / 60);
 
-            // update mario's velocity for the next update.
-            // y-vel starts negative, so mario moves up (slowing down) until vel = 0, then moves down.
-            mario.vel.y += gravity;
-        };
+    // define the timer's update function, where we have access to mario, and the context, etc.
+    timer.update = function update(deltaTime) {
+        // draw all layers in the compositor by calling all of their draw functions in the context.
+        level.comp.draw(context);
 
-        // and start the timer
-        timer.start();
-    }
+        // update mario's position
+        level.update(deltaTime);
 
-    prepareMario();
+        // update mario's velocity for the next update.
+        // y-vel starts negative, so mario moves up (slowing down) until vel = 0, then moves down.
+        mario.vel.y += gravity;
+    };
 
-    handleTimer();
+    // and start the timer
+    timer.start();
+
+
 });
 

@@ -26,4 +26,12 @@ export default class Entity {
     update(deltaTime) {
         this.traits.forEach(trait => trait.update(this, deltaTime));
     }
+
+    get isMovingUp() { return this.vel.y < 0; }
+
+    get isMovingDown() { return this.vel.y > 0; }
+
+    isAboveTopOf(tile) { return this.pos.y > tile.y1; }
+
+    isBelowBottomOf(tile) { return this.pos.y < tile.y2; }
 }
