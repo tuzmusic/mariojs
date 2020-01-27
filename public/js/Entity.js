@@ -32,9 +32,9 @@ export default class Entity {
 
     get isMovingDown() { return this.vel.y > 0; }
 
-    get isMovingLeft() { return this.vel.x < 0; }
+    get isMovingLeft() { return this.vel.x > 0; }
 
-    get isMovingRight() { return this.vel.x > 0; }
+    get isMovingRight() { return this.vel.x < 0; }
 
     hitsTopOf(tile) { return (this.pos.y + this.size.y) > tile.y1; }
 

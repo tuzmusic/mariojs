@@ -24,19 +24,17 @@ export class TileResolver {
             pos += this.tileSize; // move to the next tile
         } while (pos < pMax);
         return range;
-        // from pos1.x to pos2.x
-        // from pos1.y to pos2.y
-        // convert to indexes
-        // match by position
     }
 
     // gets a tile using indices
-    getByIndex(x, y) {
-        const tile = this.matrix.get(x, y);
+    getByIndex(indexX, indexY) {
+        const tile = this.matrix.get(indexX, indexY);
         if (tile) {
-            const y1 = y * this.tileSize;
+            const x1 = indexX * this.tileSize;
+            const x2 = x1 + this.tileSize;
+            const y1 = indexY * this.tileSize;
             const y2 = y1 + this.tileSize;
-            return { tile, y1, y2 };
+            return { tile, x1, x2, y1, y2 };
         }
     }
 

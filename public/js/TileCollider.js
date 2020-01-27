@@ -14,16 +14,12 @@ export default class TileCollider {
         matches.forEach(match => {
             if (match.tile.name !== 'ground') return;
 
-            if (entity.isMovingDown) {
-                if (entity.hitsTopOf(match)) {
-                    entity.pos.y = match.y1 - entity.size.y;
-                    entity.vel.y = 0;
-                }
-            } else if (entity.isMovingUp) {
-                if (entity.hitsBottomOf(match)) {
-                    entity.pos.y = match.y2;
-                    entity.vel.y = 0;
-                }
+            if (entity.isMovingDown && entity.hitsTopOf(match)) {
+                entity.pos.y = match.y1 - entity.size.y;
+                entity.vel.y = 0;
+            } else if (entity.isMovingUp && entity.hitsBottomOf(match)) {
+                entity.pos.y = match.y2;
+                entity.vel.y = 0;
             }
         });
     }
@@ -37,16 +33,12 @@ export default class TileCollider {
         matches.forEach(match => {
             if (match.tile.name !== 'ground') return;
 
-            if (entity.isMovingLeft) {
-                if (entity.hitsRightOf(match)) {
-                    entity.pos.x = match.x1 - entity.size.x;
-                    entity.vel.x = 0;
-                }
-            } else if (entity.isMovingRight) {
-                if (entity.hitsLeftOf(match)) {
-                    entity.pos.x = match.x2;
-                    entity.vel.x = 0;
-                }
+            if (entity.isMovingLeft && entity.hitsRightOf(match)) {
+                entity.pos.x = match.x1 - entity.size.x;
+                entity.vel.x = 0;
+            } else if (entity.isMovingRight && entity.hitsLeftOf(match)) {
+                entity.pos.x = match.x2;
+                entity.vel.x = 0;
             }
         });
     }
