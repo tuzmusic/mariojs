@@ -14,6 +14,7 @@ export default class Entity {
     constructor() {
         this.pos = new Vec2();
         this.vel = new Vec2();
+        this.size = new Vec2();
         this.traits = [];
     }
 
@@ -31,7 +32,7 @@ export default class Entity {
 
     get isMovingDown() { return this.vel.y > 0; }
 
-    isAboveTopOf(tile) { return this.pos.y > tile.y1; }
+    isAboveTopOf(tile) { return (this.pos.y + this.size.y) > tile.y1; }
 
     isBelowBottomOf(tile) { return this.pos.y < tile.y2; }
 }

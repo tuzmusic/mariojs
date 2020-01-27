@@ -6,22 +6,26 @@ export default class TileCollider {
     }
 
     checkY(entity) {
-        const match = this.tiles.matchByPosition(entity.pos.x, entity.pos.y);
-        if (!match) return;
+        const matches = this.tiles.searchByRange(
+            entity.pos.x, entity.pos.x + entity.size.x,
+            entity.pos.y, entity.pos.y + entity.size.y
+        );
 
-        if (match.tile.name !== 'ground') return;
+        matches.forEach(match => {
+            if (match.tile.name !== 'ground') return;
 
-        if (entity.isMovingDown) {
-            if (entity.isAboveTopOf(match)) {
-                entity.pos.y = match.y1;
-                entity.vel.y = 0;
+            if (entity.isMovingDown) {
+                if (entity.isAboveTopOf(match)) {
+                    entity.pos.y = match.y1 - entity.size.y;
+                    entity.vel.y = 0;
+                }
+            } else if (entity.isMovingUp) {
+                if (entity.isBelowBottomOf(match)) {
+                    entity.pos.y = match.y2;
+                    entity.vel.y = 0;
+                }
             }
-        } else if (entity.isMovingUp) {
-            if (entity.pos.y < match.y2) {
-                entity.pos.y = match.y2;
-                entity.vel.y = 0;
-            }
-        }
+        });
     }
 
     test(entity) {

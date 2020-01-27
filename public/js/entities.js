@@ -9,10 +9,10 @@ export async function createMario() {
 
     // create mario and set basic properties
     const mario = new Entity();
-
-    mario.addTrait(new Velocity());
+    mario.size.set(14, 16);
     mario.addTrait(new Jump());
     mario.addTrait(new Go());
+    mario.addTrait(new Velocity());
 
     // Add some functions to the mario entity.
 

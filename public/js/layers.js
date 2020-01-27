@@ -43,10 +43,19 @@ export function createCollisionLayer(level) {
     };
 
     return function drawCollisions(context) {
+        // draw collision box around collisions
         context.strokeStyle = 'blue';
         resolvedTiles.forEach(({ x, y }) => {
             context.beginPath();
             context.rect(x * tileSize, y * tileSize, tileSize, tileSize);
+            context.stroke();
+        });
+
+        // draw collision box around entities
+        context.strokeStyle = 'red';
+        level.entities.forEach(entity => {
+            context.beginPath();
+            context.rect(entity.pos.x, entity.pos.y, entity.size.x, entity.size.y);
             context.stroke();
         });
         resolvedTiles = [];

@@ -21,7 +21,7 @@ export default class Keyboard {
         else if (next instanceof Entity) {
             const entity = next;
             const [ trait, start, stop ] = args;
-            callback = keyState => entity[trait][keyState ? start : stop]();
+            callback = keyState => entity[trait][keyState ? start : stop](keyState);
         }
         this.keyMap.set(keyCode, callback);
     };
