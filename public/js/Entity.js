@@ -32,7 +32,15 @@ export default class Entity {
 
     get isMovingDown() { return this.vel.y > 0; }
 
-    isAboveTopOf(tile) { return (this.pos.y + this.size.y) > tile.y1; }
+    get isMovingLeft() { return this.vel.x < 0; }
 
-    isBelowBottomOf(tile) { return this.pos.y < tile.y2; }
+    get isMovingRight() { return this.vel.x > 0; }
+
+    hitsTopOf(tile) { return (this.pos.y + this.size.y) > tile.y1; }
+
+    hitsBottomOf(tile) { return this.pos.y < tile.y2; }
+
+    hitsLeftOf(tile) { return (this.pos.x + this.size.x) > tile.x1; }
+
+    hitsRightOf(tile) { return this.pos.x < tile.x2;}
 }
