@@ -27,9 +27,17 @@ Promise.all([
 
     // map key behavior for mario
     const input = new Keyboard();
+
+    // jump
     input.addMapping(' ', mario, 'jump', 'start', 'cancel');
+
+    // gp
     input.addMapping('ArrowLeft', keyState => mario.go.dir = -keyState);
     input.addMapping('ArrowRight', keyState => mario.go.dir = keyState);
+
+    // speed
+    input.addMapping('Shift', keyState => mario.go.speed *= 3 ** (keyState ? 1 : -1));
+
     input.listenTo(window);
 
     level.comp.layers.push(createCollisionLayer(level));
