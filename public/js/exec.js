@@ -3,6 +3,7 @@ import { createMario } from "./entities.js";
 import Timer from "./Timer.js";
 import Keyboard from "./Keyboard.js";
 import { createCollisionLayer } from "./layers.js";
+import Camera from "./Camera.js";
 
 const canvas = document.getElementById('screen');
 const context = canvas.getContext('2d');
@@ -21,6 +22,9 @@ Promise.all([
             }
         });
     });
+
+    const camera = new Camera();
+    window.camera = camera;
 
     // set mario's starting position
     mario.pos.set(64, 80);
@@ -51,7 +55,7 @@ Promise.all([
     // define the timer's update function, where we have access to mario, and the context, etc.
     timer.update = function update(deltaTime) {
         // draw all layers in the compositor by calling all of their draw functions in the context.
-        level.comp.draw(context);
+        level.comp.draw(context, camera);
 
         // update mario's position
         level.update(deltaTime);

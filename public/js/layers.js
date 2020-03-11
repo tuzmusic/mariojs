@@ -1,6 +1,26 @@
-export function createSpriteLayer(entities) {
-    return function drawSpriteLayer(context) {
-        entities.forEach(entity => entity.draw(context));
+export function createSpriteLayer(entities, width = 64, height = 64) {
+    // set up a buffer on which to pre-draw the sprite
+    const spriteBuffer = document.createElement('canvas');
+    spriteBuffer.width = width;
+    spriteBuffer.height = height;
+    const spriteBufferContext = spriteBuffer.getContext('2d');
+
+    return function drawSpriteLayer(layerContext, camera) {
+        entities.forEach(entity => {
+            // clear the context before we draw
+            spriteBufferContext.clearRect(0, 0, width, height);
+
+            // draw the entity to the sprite buffer
+            entity.draw(spriteBufferContext);
+
+            // draw the contents of the sprite buffer
+            // to the layer.
+            layerContext.drawImage(
+                spriteBuffer,
+                entity.pos.x - camera.pos.x,
+                entity.pos.y - camera.pos.y,
+            );
+        });
     };
 }
 
@@ -13,7 +33,7 @@ export function createSpriteLayer(entities) {
 export function createBackgroundLayer(level, sprites) {
     // create a buffer on which to pre-draw the backgrounds
     const buffer = document.createElement('canvas');
-    buffer.width = 256;
+    buffer.width = 2048;
     buffer.height = 240;
     const context = buffer.getContext('2d');
 
@@ -24,11 +44,10 @@ export function createBackgroundLayer(level, sprites) {
     // the return function takes a context and draws the buffer
     // (which contains the backgrounds) to it.
     // The return function has closure over the buffer.
-    return function drawBackgroundLayer(context) {
-        context.drawImage(buffer, 0, 0);
+    return function drawBackgroundLayer(context, camera) {
+        context.drawImage(buffer, -camera.pos.x, -camera.pos.y);
     };
 }
-
 
 export function createCollisionLayer(level) {
     let resolvedTiles = [];

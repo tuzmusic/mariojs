@@ -10,15 +10,15 @@ export async function createMario() {
     const mario = new Entity();
     mario.size.set(14, 16);
 
-    mario.addTrait(new Jump());
     mario.addTrait(new Go());
+    mario.addTrait(new Jump());
     // mario.addTrait(new Velocity());
 
     // Add some functions to the mario entity.
 
     // Draws mario in the context
     mario.draw = function (context) {
-        sprite.draw('idle', context, this.pos.x, this.pos.y);
+        sprite.draw('idle', context, 0, 0);
     };
 
     return mario;
