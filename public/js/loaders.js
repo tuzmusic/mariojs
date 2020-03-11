@@ -11,14 +11,29 @@ export function loadImage(url) {
 }
 
 function createTiles(level, backgrounds) {
+    function applyRange(background, xStart, xLen, yStart, yLen) {
+        const xEnd = xStart + xLen;
+        const yEnd = yStart + yLen;
+        for (let x = xStart; x < xEnd; x++) {
+            for (let y = yStart; y < yEnd; y++) {
+                level.tiles.set(x, y, {
+                    name: background.tile
+                });
+            }
+        }
+    }
+
     backgrounds.forEach(background => {
-        background.ranges.forEach(([ x1, x2, y1, y2 ]) => {
-            for (let x = x1; x < x2; x++) {
-                for (let y = y1; y < y2; y++) {
-                    level.tiles.set(x, y, {
-                        name: background.tile
-                    });
-                }
+        background.ranges.forEach(args => {
+            if (args.length === 4) {
+                const [ xStart, xLen, yStart, yLen ] = args;
+                applyRange(background, xStart, xLen, yStart, yLen);
+            } else if (args.length === 3) {
+                const [ xStart, xLen, yStart ] = args;
+                applyRange(background, xStart, xLen, yStart, 1);
+            } else if (args.length === 2) {
+                const [ xStart, yStart ] = args;
+                applyRange(background, xStart, 1, yStart, 1);
             }
         });
     });
