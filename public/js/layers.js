@@ -61,12 +61,16 @@ export function createCollisionLayer(level) {
         return getByIndexOriginal.call(tileResolver, x, y);
     };
 
-    return function drawCollisions(context) {
+    return function drawCollisions(context, camera) {
         // draw collision box around collisions
         context.strokeStyle = 'blue';
         resolvedTiles.forEach(({ x, y }) => {
             context.beginPath();
-            context.rect(x * tileSize, y * tileSize, tileSize, tileSize);
+            context.rect(
+                x * tileSize - camera.pos.x,
+                y * tileSize - camera.pos.y,
+                tileSize,
+                tileSize);
             context.stroke();
         });
 
@@ -74,7 +78,11 @@ export function createCollisionLayer(level) {
         context.strokeStyle = 'red';
         level.entities.forEach(entity => {
             context.beginPath();
-            context.rect(entity.pos.x, entity.pos.y, entity.size.x, entity.size.y);
+            context.rect(
+                entity.pos.x - camera.pos.x,
+                entity.pos.y - camera.pos.y,
+                entity.size.x,
+                entity.size.y);
             context.stroke();
         });
         resolvedTiles = [];
