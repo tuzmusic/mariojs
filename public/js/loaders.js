@@ -18,13 +18,15 @@ function createTiles(level, backgrounds) {
         const yEnd = yStart + yLen;
         for (let x = xStart; x < xEnd; x++) {
             for (let y = yStart; y < yEnd; y++) {
-                level.tiles.set(x, y, {
-                    name: background.tile
-                });
+                const name = background.tile;
+                // store the positions of these tiles
+                // in our level's tile map
+                level.tiles.set(x, y, { name });
             }
         }
     }
 
+    // read from the spec to write all the tile locations for the level
     backgrounds.forEach(background => {
         background.ranges.forEach(args => {
             if (args.length === 4) {
@@ -42,14 +44,21 @@ function createTiles(level, backgrounds) {
 }
 
 function loadSpriteSheet(name) {
+    // get the spritesheet info, so we get the imageURL it uses
     return loadJSON(`/sprites/${ name }.json`)
+        // now that we have the url for the image, load it and pass
+        // it on with the rest of the info about the level
         .then(sheetSpec => Promise.all([
             sheetSpec,
             loadImage(sheetSpec.imageURL)
         ]))
         .then(([ sheetSpec, image ]) => {
+            // create the sprite objects from the spritesheet info,
+            // using the spritesheet image
             const sprites = new SpriteSheet(image, sheetSpec.tileW, sheetSpec.tileH);
 
+            // use the info for the tiles from the spec to
+            // populate the [name: tile] map
             sheetSpec.tiles.forEach(tile => {
                 sprites.defineTile(tile.name, ...tile.index);
             });
@@ -59,24 +68,28 @@ function loadSpriteSheet(name) {
 }
 
 export function loadLevel(name) {
+    // get the level info, so we get the spritesheet it needs
     return loadJSON(`/levels/${ name }.json`)
+        // now that we have the spritesheet, load it and pass
+        // it on with the rest of the info about the level
         .then(levelSpec => Promise.all([
-            levelSpec, loadSpriteSheet(levelSpec.spriteSheet)
+            levelSpec,
+            loadSpriteSheet(levelSpec.spriteSheet)
         ]))
         .then(([ levelSpec, backgroundSprites ]) => {
             const level = new Level();
 
+            // store the tile info in the level object
             createTiles(level, levelSpec.backgrounds);
 
-            // create the background layer
+            // create the background layer based on the above info,
+            // using the sprites for the level.
             const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
             level.comp.layers.push(backgroundLayer);
 
             // create the sprites for the entities in the level.
             const spriteLayer = createSpriteLayer(level.entities);
             level.comp.layers.push(spriteLayer);
-
-            console.log(level);
 
             return level;
         });

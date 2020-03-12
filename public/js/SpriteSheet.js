@@ -29,7 +29,7 @@ export default class SpriteSheet {
             width,
             height, // what part of the image to draw
             0, 0, width, height); // where to draw it
-        this.tiles.set(name, buffer);
+        this.tiles.set(name, buffer); // store the info about the tile in our map
     }
 
     /**
