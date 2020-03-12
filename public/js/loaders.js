@@ -1,6 +1,8 @@
 import { createBackgroundLayer, createSpriteLayer } from "./layers.js";
 import Level from "./Level.js";
-import { loadBackgroundSprites } from "./sprites.js";
+import SpriteSheet from "./SpriteSheet.js";
+
+const loadJSON = (url) => fetch(url).then(res => res.json());
 
 export function loadImage(url) {
     return new Promise(resolve => {
@@ -39,26 +41,44 @@ function createTiles(level, backgrounds) {
     });
 }
 
+function loadSpriteSheet(name) {
+    return loadJSON(`/sprites/${ name }.json`)
+        .then(sheetSpec => Promise.all([
+            sheetSpec,
+            loadImage(sheetSpec.imageURL)
+        ]))
+        .then(([ sheetSpec, image ]) => {
+            const sprites = new SpriteSheet(image, sheetSpec.tileW, sheetSpec.tileH);
+
+            sheetSpec.tiles.forEach(tile => {
+                sprites.defineTile(tile.name, ...tile.index);
+            });
+
+            return sprites;
+        });
+}
+
 export function loadLevel(name) {
-    return Promise.all([
-        fetch(`/levels/${ name }.json`).then(res => res.json()),
-        loadBackgroundSprites()
-    ]).then(([ levelSpec, backgroundSprites ]) => {
-        const level = new Level();
+    return loadJSON(`/levels/${ name }.json`)
+        .then(levelSpec => Promise.all([
+            levelSpec, loadSpriteSheet(levelSpec.spriteSheet)
+        ]))
+        .then(([ levelSpec, backgroundSprites ]) => {
+            const level = new Level();
 
-        createTiles(level, levelSpec.backgrounds);
+            createTiles(level, levelSpec.backgrounds);
 
-        // create the background layer
-        const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
-        level.comp.layers.push(backgroundLayer);
+            // create the background layer
+            const backgroundLayer = createBackgroundLayer(level, backgroundSprites);
+            level.comp.layers.push(backgroundLayer);
 
-        // create the sprites for the entities in the level.
-        const spriteLayer = createSpriteLayer(level.entities);
-        level.comp.layers.push(spriteLayer);
+            // create the sprites for the entities in the level.
+            const spriteLayer = createSpriteLayer(level.entities);
+            level.comp.layers.push(spriteLayer);
 
-        console.log(level);
+            console.log(level);
 
-        return level;
-    });
+            return level;
+        });
 }
 
