@@ -2,7 +2,7 @@ import { loadLevel, } from "./loaders.js";
 import { createMario } from "./entities.js";
 import Timer from "./Timer.js";
 import Keyboard from "./Keyboard.js";
-import { createCollisionLayer } from "./layers.js";
+import { createCameraLayer, createCollisionLayer } from "./layers.js";
 import Camera from "./Camera.js";
 import { setupMouseControl } from "./debug.js";
 
@@ -36,7 +36,7 @@ Promise.all([
 
     input.listenTo(window);
 
-    level.comp.layers.push(createCollisionLayer(level));
+    level.comp.layers.push(createCollisionLayer(level), createCameraLayer(camera));
 
     // add mario to the level
     level.entities.add(mario);

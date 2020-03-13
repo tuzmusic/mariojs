@@ -12,7 +12,7 @@ export default class TileCollider {
         );
 
         matches.forEach(match => {
-            if (match.tile.name !== 'ground') return;
+            if (match.tile.type !== 'ground') return;
 
             if (entity.isMovingDown && entity.hitsTopOf(match)) {
                 entity.pos.y = match.y1 - entity.size.y;
