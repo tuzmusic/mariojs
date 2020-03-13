@@ -31,7 +31,7 @@ export default class TileCollider {
         );
 
         matches.forEach(match => {
-            if (match.tile.name !== 'ground') return;
+            if (match.tile.type !== 'ground') return;
 
             if (entity.isMovingLeft && entity.hitsRightOf(match)) {
                 entity.pos.x = match.x1 - entity.size.x;

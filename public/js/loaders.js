@@ -19,9 +19,13 @@ function createTiles(level, backgrounds) {
         for (let x = xStart; x < xEnd; x++) {
             for (let y = yStart; y < yEnd; y++) {
                 const name = background.tile;
+                const type = background.type;
                 // store the positions of these tiles
                 // in our level's tile map
-                level.tiles.set(x, y, { name });
+                level.tiles.set(x, y, {
+                    name: background.tile,
+                    type: background.type
+                });
             }
         }
     }
